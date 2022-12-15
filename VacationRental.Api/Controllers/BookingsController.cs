@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+
+using VacationRental.Api.Models.Request;
+using VacationRental.Api.Models.Response;
 
 namespace VacationRental.Api.Controllers
 {
@@ -35,6 +38,7 @@ namespace VacationRental.Api.Controllers
         {
             if (model.Nights <= 0)
                 throw new ApplicationException("Nigts must be positive");
+
             if (!_rentals.ContainsKey(model.RentalId))
                 throw new ApplicationException("Rental not found");
 
@@ -51,10 +55,10 @@ namespace VacationRental.Api.Controllers
                         count++;
                     }
                 }
+
                 if (count >= _rentals[model.RentalId].Units)
                     throw new ApplicationException("Not available");
             }
-
 
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
 

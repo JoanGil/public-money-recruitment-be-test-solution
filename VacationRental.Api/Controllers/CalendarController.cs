@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+
 using VacationRental.Api.Models;
+using VacationRental.Api.Models.Response;
 
 namespace VacationRental.Api.Controllers
 {
@@ -25,32 +29,42 @@ namespace VacationRental.Api.Controllers
         {
             if (nights < 0)
                 throw new ApplicationException("Nights must be positive");
+
             if (!_rentals.ContainsKey(rentalId))
                 throw new ApplicationException("Rental not found");
 
-            var result = new CalendarViewModel 
+            var rental = _rentals[rentalId];
+
+            var result = new CalendarViewModel
             {
                 RentalId = rentalId,
-                Dates = new List<CalendarDateViewModel>() 
+                Dates = new List<CalendarDateViewModel>()
             };
-            for (var i = 0; i < nights; i++)
+
+            for (var day = 0; day < nights; day++)
             {
-                var date = new CalendarDateViewModel
+                var calendarDate = new CalendarDateViewModel
                 {
-                    Date = start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingViewModel>()
+                    Date = start.Date.AddDays(day),
+                    Bookings = new List<CalendarBookingViewModel>(),
                 };
 
-                foreach (var booking in _bookings.Values)
+                var bookings = _bookings.Values
+                    .Where(booking => booking.RentalId == rentalId
+                        && booking.Start <= calendarDate.Date && booking.Start.AddDays(booking.Nights) > calendarDate.Date);
+
+                if (bookings.Any())
                 {
-                    if (booking.RentalId == rentalId
-                        && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
+                    calendarDate.Bookings = bookings.Select(booking => new CalendarBookingViewModel
                     {
-                        date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id });
-                    }
+                        Id = booking.Id,
+                        Unit = rental.Units
+                    }).ToList();
+
+                    calendarDate.PreparationTimes = bookings.Select(booking => new CalendarPreparationTimeModel { Unit = rental.PreparationTimeInDays }).ToList();
                 }
 
-                result.Dates.Add(date);
+                result.Dates.Add(calendarDate);
             }
 
             return result;

@@ -5,8 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 using System.Collections.Generic;
-
-using VacationRental.Api.Models;
+using VacationRental.Api.Models.Response;
 
 var builder = WebApplication.CreateBuilder(args);
 
