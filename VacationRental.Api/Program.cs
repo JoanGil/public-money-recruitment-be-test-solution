@@ -6,13 +6,18 @@ using Microsoft.OpenApi.Models;
 
 using System.Collections.Generic;
 
+using VacationRental.Infrastructure;
 using VacationRental.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<VacationRentalContext>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new OpenApiInfo { Title = "Vacation rental information", Version = "v1" }));
+
+
 
 builder.Services.AddSingleton<IDictionary<int, Rental>>(new Dictionary<int, Rental>());
 builder.Services.AddSingleton<IDictionary<int, Booking>>(new Dictionary<int, Booking>());

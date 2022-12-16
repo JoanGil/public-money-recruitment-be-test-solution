@@ -59,7 +59,7 @@ namespace VacationRental.Api.Controllers
                     calendarDate.Bookings = bookings.Select(booking => new CalendarBookingViewModel
                     {
                         Id = booking.Id,
-                        Unit = rental.Units
+                        //Unit = rental.Units
                     }).ToList();
 
                     calendarDate.PreparationTimes = bookings.Select(booking => new CalendarPreparationTimeModel { Unit = rental.PreparationTimeInDays }).ToList();

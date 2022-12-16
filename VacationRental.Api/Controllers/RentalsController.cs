@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using VacationRental.Api.ApiModels;
 using VacationRental.Api.Models.Response;
+using VacationRental.Core.Models.Api;
 using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
@@ -39,7 +39,7 @@ namespace VacationRental.Api.Controllers
             _rentals.Add(key.Id, new Rental
             {
                 Id = key.Id,
-                Units = model.NumberOfUnits,
+                //Units = model.NumberOfUnits,
                 PreparationTimeInDays = model.PreparationTimeInDays
             });
 

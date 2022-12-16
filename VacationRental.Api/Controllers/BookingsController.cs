@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 
-using VacationRental.Api.ApiModels;
 using VacationRental.Api.Models.Response;
+using VacationRental.Core.Models.Api;
 using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
@@ -57,8 +57,8 @@ namespace VacationRental.Api.Controllers
                     }
                 }
 
-                if (count >= _rentals[model.RentalId].Units)
-                    throw new ApplicationException("Not available");
+                //if (count >= _rentals[model.RentalId].Units)
+                //    throw new ApplicationException("Not available");
             }
 
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
