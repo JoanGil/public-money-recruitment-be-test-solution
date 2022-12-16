@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace VacationRental.Api.Models.Response
+﻿namespace VacationRental.Infrastructure.Data
 {
-    public class BookingViewModel
+    public class Booking
     {
         public int Id { get; set; }
         public int RentalId { get; set; }

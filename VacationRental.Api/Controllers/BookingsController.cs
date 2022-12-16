@@ -3,8 +3,9 @@
 using System;
 using System.Collections.Generic;
 
-using VacationRental.Api.Models.Request;
+using VacationRental.Api.ApiModels;
 using VacationRental.Api.Models.Response;
+using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
 {
@@ -12,12 +13,12 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
-        private readonly IDictionary<int, BookingViewModel> _bookings;
+        private readonly IDictionary<int, Rental> _rentals;
+        private readonly IDictionary<int, Booking> _bookings;
 
         public BookingsController(
-            IDictionary<int, RentalViewModel> rentals,
-            IDictionary<int, BookingViewModel> bookings)
+            IDictionary<int, Rental> rentals,
+            IDictionary<int, Booking> bookings)
         {
             _rentals = rentals;
             _bookings = bookings;
@@ -25,7 +26,7 @@ namespace VacationRental.Api.Controllers
 
         [HttpGet]
         [Route("{bookingId:int}")]
-        public BookingViewModel Get(int bookingId)
+        public Booking Get(int bookingId)
         {
             if (!_bookings.ContainsKey(bookingId))
                 throw new ApplicationException("Booking not found");
@@ -62,7 +63,7 @@ namespace VacationRental.Api.Controllers
 
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
 
-            _bookings.Add(key.Id, new BookingViewModel
+            _bookings.Add(key.Id, new Booking
             {
                 Id = key.Id,
                 Nights = model.Nights,

@@ -6,6 +6,7 @@ using System.Linq;
 
 using VacationRental.Api.Models;
 using VacationRental.Api.Models.Response;
+using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
 {
@@ -13,12 +14,12 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
-        private readonly IDictionary<int, BookingViewModel> _bookings;
+        private readonly IDictionary<int, Rental> _rentals;
+        private readonly IDictionary<int, Booking> _bookings;
 
         public CalendarController(
-            IDictionary<int, RentalViewModel> rentals,
-            IDictionary<int, BookingViewModel> bookings)
+            IDictionary<int, Rental> rentals,
+            IDictionary<int, Booking> bookings)
         {
             _rentals = rentals;
             _bookings = bookings;

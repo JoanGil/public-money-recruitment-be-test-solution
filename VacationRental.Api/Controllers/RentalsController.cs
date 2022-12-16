@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-using VacationRental.Api.Models.Request;
+using VacationRental.Api.ApiModels;
 using VacationRental.Api.Models.Response;
+using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
 {
@@ -12,32 +14,32 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
+        private readonly IDictionary<int, Rental> _rentals;
 
-        public RentalsController(IDictionary<int, RentalViewModel> rentals)
+        public RentalsController(IDictionary<int, Rental> rentals)
         {
             _rentals = rentals;
         }
 
         [HttpGet]
         [Route("{rentalId:int}")]
-        public RentalViewModel Get(int rentalId)
+        public async Task<IActionResult> GetRentalById(int rentalId)
         {
             if (!_rentals.ContainsKey(rentalId))
                 throw new ApplicationException("Rental not found");
 
-            return _rentals[rentalId];
+            return Ok(_rentals[rentalId]);
         }
 
         [HttpPost]
-        public ResourceIdViewModel Post(RentalBindingModel model)
+        public ResourceIdViewModel AddRental(RentalBindingModel model)
         {
             var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
 
-            _rentals.Add(key.Id, new RentalViewModel
+            _rentals.Add(key.Id, new Rental
             {
                 Id = key.Id,
-                Units = model.Units,
+                Units = model.NumberOfUnits,
                 PreparationTimeInDays = model.PreparationTimeInDays
             });
 
