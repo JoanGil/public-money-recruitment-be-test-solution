@@ -1,11 +1,12 @@
 ﻿using VacationRental.Core.Models.Api;
 using VacationRental.Core.Models.Application;
+using VacationRental.Core.Models.Response;
 
 namespace VacationRental.Core.Interfaces
 {
     public interface IRentalService
     {
-        Task<RentalModel> GetRentalById(int rentalId);
-        Task<RentalModel> CreateRental(RentalBindingModel rental);
+        Task<ResponseModel<RentalModel>> GetRentalById(int rentalId);
+        Task<ResponseModel> CreateRental(RentalRequestModel rental);
     }
 }

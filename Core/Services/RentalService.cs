@@ -1,6 +1,11 @@
-﻿using VacationRental.Core.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System.Net;
+
+using VacationRental.Core.Interfaces;
 using VacationRental.Core.Models.Api;
 using VacationRental.Core.Models.Application;
+using VacationRental.Core.Models.Response;
 using VacationRental.Infrastructure;
 using VacationRental.Infrastructure.Data;
 
@@ -15,38 +20,43 @@ namespace VacationRental.Core.Services
             this.context = context;
         }
 
-        public async Task<RentalModel> GetRentalById(int rentalId)
+        public async Task<ResponseModel<RentalModel>> GetRentalById(int rentalId)
         {
-            var rental = await context.Rental.FindAsync(rentalId);
+            var rental = await context.Rental.Include(r => r.Units).Where(r => r.Id == rentalId).FirstOrDefaultAsync();
             if (rental == null)
-                return null;
+                return new ResponseModel<RentalModel>(HttpStatusCode.NotFound, "Rental not found");
 
-            return new RentalModel
+            var response = new ResponseModel<RentalModel>
             {
-                Id = rental.Id,
-                Units = rental.Units.Select(u => new UnitModel { Id = u.Id, RentalId = rentalId }).ToList(),
-                PreparationTimeInDays = rental.PreparationTimeInDays
+                Data = new RentalModel
+                {
+                    Id = rental.Id,
+                    Units = rental.Units.Select(u => new UnitModel { Id = u.Id }).ToList(),
+                    PreparationTimeInDays = rental.PreparationTimeInDays
+                }
             };
+
+            return response;
         }
 
-        public async Task<RentalModel> AddRental(RentalBindingModel model)
+        public async Task<ResponseModel> CreateRental(RentalRequestModel model)
         {
+            if (model == null)
+                return new ResponseModel(HttpStatusCode.BadRequest, "Model cannot be null");
+
             var rental = new Rental
             {
-                Id = model.Id,
-                Units = model.Units,
                 PreparationTimeInDays = model.PreparationTimeInDays
             };
 
             await context.Rental.AddAsync(rental);
+
+            var units = Enumerable.Range(1, model.Units).Select(u => new Unit { RentalId = rental.Id }).ToList();
+            await context.Unit.AddRangeAsync(units);
+
             await context.SaveChangesAsync();
 
-            return new RentalModel
-            {
-                Id = rental.Id,
-                Units = rental.Units,
-                PreparationTimeInDays = rental.PreparationTimeInDays
-            };
+            return new ResponseModel { Data = rental.Id };
         }
     }
 }

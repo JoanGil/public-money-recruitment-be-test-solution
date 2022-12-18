@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using System;
-using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 using VacationRental.Api.Models.Response;
+using VacationRental.Core.Interfaces;
 using VacationRental.Core.Models.Api;
-using VacationRental.Infrastructure.Data;
 
 namespace VacationRental.Api.Controllers
 {
@@ -14,36 +13,32 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, Rental> _rentals;
+        private readonly IRentalService rentalService;
 
-        public RentalsController(IDictionary<int, Rental> rentals)
+        public RentalsController(IRentalService rentalService)
         {
-            _rentals = rentals;
+            this.rentalService = rentalService;
         }
 
         [HttpGet]
         [Route("{rentalId:int}")]
         public async Task<IActionResult> GetRentalById(int rentalId)
         {
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
+            var response = await rentalService.GetRentalById(rentalId);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
 
-            return Ok(_rentals[rentalId]);
+            return Ok(response.Data);
         }
 
         [HttpPost]
-        public ResourceIdViewModel AddRental(RentalBindingModel model)
+        public async Task<IActionResult> CreateRental(RentalRequestModel model)
         {
-            var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
+            var response = await rentalService.CreateRental(model);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
 
-            _rentals.Add(key.Id, new Rental
-            {
-                Id = key.Id,
-                //Units = model.NumberOfUnits,
-                PreparationTimeInDays = model.PreparationTimeInDays
-            });
-
-            return key;
+            return Ok(new ResourceIdViewModel { Id = (int)response.Data });
         }
     }
 }

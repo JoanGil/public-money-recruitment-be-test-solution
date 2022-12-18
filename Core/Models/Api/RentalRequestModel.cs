@@ -1,8 +1,8 @@
 ﻿namespace VacationRental.Core.Models.Api
 {
-    public class RentalBindingModel
+    public class RentalRequestModel
     {
-        public int NumberOfUnits { get; set; }
+        public int Units { get; set; }
         public int PreparationTimeInDays { get; set; }
     }
 }

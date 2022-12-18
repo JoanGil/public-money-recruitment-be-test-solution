@@ -1,4 +1,4 @@
-﻿namespace VacationRental.Api.Models
+﻿namespace VacationRental.Core.Models.Application
 {
     public class CalendarPreparationTimeModel
     {

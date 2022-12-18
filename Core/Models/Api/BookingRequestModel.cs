@@ -1,6 +1,6 @@
 ﻿namespace VacationRental.Core.Models.Api
 {
-    public class BookingBindingModel
+    public class BookingRequestModel
     {
         public int RentalId { get; set; }
 
@@ -9,8 +9,8 @@
             get => _startIgnoreTime;
             set => _startIgnoreTime = value.Date;
         }
-
         private DateTime _startIgnoreTime;
+
         public int Nights { get; set; }
     }
 }
