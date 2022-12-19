@@ -32,9 +32,20 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRental(RentalRequestModel model)
+        public async Task<IActionResult> CreateRental(RentalCreateModel model)
         {
             var response = await rentalService.CreateRental(model);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
+
+            return Ok(new ResourceIdViewModel { Id = (int)response.Data });
+        }
+
+        [HttpPut]
+        [Route("{rentalId:int}")]
+        public async Task<IActionResult> UpdateRental(int rentalId, RentalUpdateModel model)
+        {
+            var response = await rentalService.UpdateRental(rentalId, model);
             if (response.HttpStatusCode != HttpStatusCode.OK)
                 return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
 

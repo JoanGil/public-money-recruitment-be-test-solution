@@ -55,7 +55,7 @@ namespace VacationRental.Core.Services
 
                     calendarDate.PreparationTimes = bookingsResponse.Data.Select(booking => new CalendarPreparationTimeModel
                     {
-                        Unit = booking.UnitId
+                        Unit = rentalResponse.Data.PreparationTimeInDays
                     }).ToList();
                 }
 

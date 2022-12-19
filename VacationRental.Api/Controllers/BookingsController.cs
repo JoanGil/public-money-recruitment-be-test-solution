@@ -31,8 +31,18 @@ namespace VacationRental.Api.Controllers
             return Ok(response.Data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllBookings()
+        {
+            var response = await bookingService.GetAllBookings();
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
+
+            return Ok(response.Data);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateBooking(BookingRequestModel model)
+        public async Task<IActionResult> CreateBooking(BookingCreateModel model)
         {
             var response = await bookingService.CreateBooking(model);
             if (response.HttpStatusCode != HttpStatusCode.OK)

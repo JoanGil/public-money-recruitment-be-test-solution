@@ -7,6 +7,7 @@ namespace VacationRental.Core.Interfaces
     public interface IRentalService
     {
         Task<ResponseModel<RentalModel>> GetRentalById(int rentalId);
-        Task<ResponseModel> CreateRental(RentalRequestModel rental);
+        Task<ResponseModel> CreateRental(RentalCreateModel rental);
+        Task<ResponseModel> UpdateRental(int rentalId, RentalUpdateModel rental);
     }
 }

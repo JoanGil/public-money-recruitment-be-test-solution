@@ -11,6 +11,6 @@ namespace VacationRental.Core.Interfaces
     {
         Task<ResponseModel<BookingModel>> GetBookingById(int bookingId);
         Task<ResponseModel<List<BookingModel>>> GetAllBookings(int? rentalId = null, Expression<Func<Booking, bool>> expression = null);
-        Task<ResponseModel> CreateBooking(BookingRequestModel model);
+        Task<ResponseModel> CreateBooking(BookingCreateModel model);
     }
 }

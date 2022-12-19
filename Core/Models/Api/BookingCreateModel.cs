@@ -1,6 +1,6 @@
 ﻿namespace VacationRental.Core.Models.Api
 {
-    public class BookingRequestModel
+    public class BookingCreateModel
     {
         public int RentalId { get; set; }
 

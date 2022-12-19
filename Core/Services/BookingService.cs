@@ -44,7 +44,7 @@ namespace VacationRental.Core.Services
             return response;
         }
 
-        public async Task<ResponseModel> CreateBooking(BookingRequestModel model)
+        public async Task<ResponseModel> CreateBooking(BookingCreateModel model)
         {
             if (model == null)
                 return new ResponseModel(HttpStatusCode.BadRequest, "Model cannot be null");
@@ -57,11 +57,12 @@ namespace VacationRental.Core.Services
                 return new ResponseModel(rentalResponse.HttpStatusCode, rentalResponse.Validation.Message);
 
             var bookings = await GetAllBookings(model.RentalId);
+            var preparation = rentalResponse.Data.PreparationTimeInDays;
 
             var overlappingBookings = bookings.Data
                 .Where((b => (b.Start <= model.Start.Date && b.Start.AddDays(b.Nights) > model.Start.Date)
-                    || (b.Start < model.Start.AddDays(model.Nights) && b.Start.AddDays(b.Nights) >= model.Start.AddDays(model.Nights))
-                    || (b.Start > model.Start && b.Start.AddDays(b.Nights) < model.Start.AddDays(model.Nights))))
+                    || (b.Start < model.Start.AddDays(model.Nights + preparation) && b.Start.AddDays(b.Nights) >= model.Start.AddDays(model.Nights + preparation))
+                    || (b.Start > model.Start && b.Start.AddDays(b.Nights) < model.Start.AddDays(model.Nights + preparation))))
                 .ToList();
 
             if (overlappingBookings.Count >= rentalResponse.Data.Units.Count)
