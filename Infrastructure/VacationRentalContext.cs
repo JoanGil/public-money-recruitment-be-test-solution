@@ -6,7 +6,7 @@ namespace VacationRental.Infrastructure
 {
     public class VacationRentalContext : DbContext
     {
-        public VacationRentalContext()
+        public VacationRentalContext(DbContextOptions<VacationRentalContext> options) : base(options)
         {
         }
 

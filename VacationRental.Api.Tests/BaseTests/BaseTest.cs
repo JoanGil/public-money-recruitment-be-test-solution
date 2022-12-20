@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 using VacationRental.Api.Tests.Helpers;
@@ -32,18 +29,20 @@ namespace DBoxx.Tests.Base
                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                    .Options;
 
-            context = new VacationRentalContext();
+            context = new VacationRentalContext(options);
         }
 
-        protected List<Booking> GetFakeBookings(int count)
+        protected List<Booking> GetFakeBookings(int count, int? createdRentalId = null)
         {
             var bookings = new Fixture()
                                    .Build<Booking>()
                                    .Do(o =>
                                    {
                                        o.Id = bookingId++;
+                                       o.RentalId = createdRentalId ?? 0;
                                        o.Start = DateTime.Now;
                                        o.Nights = FakerExtensions.GenerateRandomNumber(1);
+                                       o.Unit = GetFakeUnits(1).FirstOrDefault();
                                    })
                                    .OmitAutoProperties()
                                    .CreateMany(count).ToList();
@@ -51,9 +50,9 @@ namespace DBoxx.Tests.Base
             return bookings;
         }
 
-        protected async Task<List<Booking>> GetAndAddFakeBookings(int count)
+        protected async Task<List<Booking>> GetAndAddFakeBookings(int count, int? createdRentalId = null)
         {
-            var bookings = GetFakeBookings(count);
+            var bookings = GetFakeBookings(count, createdRentalId);
             context.Booking.AddRange(bookings);
             await context.SaveChangesAsync();
             return bookings;

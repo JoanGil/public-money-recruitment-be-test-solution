@@ -23,9 +23,9 @@ namespace VacationRental.Core.Services
             this.rentalService = rentalService;
         }
 
-        public async Task<ResponseModel<BookingModel>> GetBookingById(int rentalId)
+        public async Task<ResponseModel<BookingModel>> GetBookingById(int bookingId)
         {
-            var booking = await context.Booking.Include(r => r.Unit).Where(r => r.Id == rentalId).FirstOrDefaultAsync();
+            var booking = await context.Booking.Include(b => b.Unit).Where(b => b.Id == bookingId).FirstOrDefaultAsync();
             if (booking == null)
                 return new ResponseModel<BookingModel>(HttpStatusCode.NotFound, "Booking not found");
 

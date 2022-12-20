@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 using VacationRental.Api.Tests.BaseTests;
@@ -27,7 +24,7 @@ namespace VacationRental.Api.Tests.BookingServiceTests
         }
 
         [Fact]
-        public async Task GetBookingById_BookingWithNoId_ReturnsNotFoundResponseModel()
+        public async Task GetBookingById_NoBookingOnTheDatabase_ReturnsNotFoundResponseModel()
         {
             // Arrange
             var expectedResponse = new ResponseModel<BookingModel>(HttpStatusCode.NotFound, "Booking not found");
@@ -38,5 +35,35 @@ namespace VacationRental.Api.Tests.BookingServiceTests
             // Assert
             expectedResponse.Should().BeEquivalentTo(actualResponse);
         }
+
+        [Fact]
+        public async Task GetBookingById_NoBookingIdOnTheDatabase_ReturnsNotFoundResponseModel()
+        {
+            // Arrange
+            _ = await GetAndAddFakeBookings(10);
+            var expectedResponse = new ResponseModel<BookingModel>(HttpStatusCode.NotFound, "Booking not found");
+
+            // Act
+            var actualResponse = await bookingService.GetBookingById(FakerExtensions.GenerateRandomNumber(3));
+
+            // Assert
+            expectedResponse.Should().BeEquivalentTo(actualResponse);
+        }
+
+        [Fact]
+        public async Task GetBookingById_BookingWithId_ReturnsResponseModelWithBooking()
+        {
+            // Arrange
+            var insertedRental = (await GetAndAddFakeRentals(1)).First();
+            var insertedBooking = (await GetAndAddFakeBookings(1, insertedRental.Id)).First();
+
+            // Act
+            var actualResponse = await bookingService.GetBookingById(insertedBooking.Id);
+
+            // Assert
+            actualResponse.Validation.IsValid.Should().BeTrue();
+            actualResponse.Data.Should().NotBeNull();
+        }
+
     }
 }
