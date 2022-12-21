@@ -55,15 +55,13 @@ namespace VacationRental.Api.Tests.BookingServiceTests
         {
             // Arrange
             var insertedRental = (await GetAndAddFakeRentals(1)).First();
-            var insertedBooking = (await GetAndAddFakeBookings(1, insertedRental.Id)).First();
 
             // Act
-            var actualResponse = await bookingService.GetBookingById(insertedBooking.Id);
+            var actualResponse = await bookingService.GetBookingById(insertedRental.Bookings.First().Id);
 
             // Assert
             actualResponse.Validation.IsValid.Should().BeTrue();
             actualResponse.Data.Should().NotBeNull();
         }
-
     }
 }

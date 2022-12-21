@@ -26,8 +26,8 @@ namespace VacationRental.Core.Services
                 return new ResponseModel<CalendarModel>(HttpStatusCode.BadRequest, "Nights value must be positive");
 
             var rentalResponse = await rentalService.GetRentalById(rentalId);
-            if (rentalResponse.HttpStatusCode == HttpStatusCode.NotFound)
-                return new ResponseModel<CalendarModel>(rentalResponse.HttpStatusCode, rentalResponse.Validation.Message);
+            if (rentalResponse == null || rentalResponse.HttpStatusCode == HttpStatusCode.NotFound)
+                return new ResponseModel<CalendarModel>(HttpStatusCode.NotFound, "Rental not found");
 
             var result = new CalendarModel
             {

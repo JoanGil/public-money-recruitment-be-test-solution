@@ -53,8 +53,8 @@ namespace VacationRental.Core.Services
                 return new ResponseModel(HttpStatusCode.BadRequest, "Nights cannot be 0 or less");
 
             var rentalResponse = await rentalService.GetRentalById(model.RentalId);
-            if (rentalResponse.HttpStatusCode == HttpStatusCode.NotFound)
-                return new ResponseModel(rentalResponse.HttpStatusCode, rentalResponse.Validation.Message);
+            if (rentalResponse == null || rentalResponse.HttpStatusCode == HttpStatusCode.NotFound)
+                return new ResponseModel(HttpStatusCode.NotFound, "Rental not found");
 
             var bookings = await GetAllBookings(model.RentalId);
             var preparation = rentalResponse.Data.PreparationTimeInDays;

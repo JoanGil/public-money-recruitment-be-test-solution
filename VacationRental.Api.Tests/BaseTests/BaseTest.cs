@@ -32,6 +32,32 @@ namespace DBoxx.Tests.Base
             context = new VacationRentalContext(options);
         }
 
+        protected List<Rental> GetFakeRentals(int count)
+        {
+            var rentals = new Fixture()
+                                   .Build<Rental>()
+                                   .Do(o =>
+                                   {
+                                       var id = rentalId++;
+
+                                       o.Id = id;
+                                       o.PreparationTimeInDays = FakerExtensions.GenerateRandomNumber(1);
+                                       o.Units = GetFakeUnits(FakerExtensions.GenerateRandomNumber(1));
+                                       o.Bookings = GetFakeBookings(FakerExtensions.GenerateRandomNumber(1), id).ToList();
+                                   })
+                                   .OmitAutoProperties()
+                                   .CreateMany(count).ToList();
+
+            return rentals;
+        }
+        protected async Task<List<Rental>> GetAndAddFakeRentals(int count)
+        {
+            var rentals = GetFakeRentals(count);
+            context.Rental.AddRange(rentals);
+            await context.SaveChangesAsync();
+            return rentals;
+        }
+
         protected List<Booking> GetFakeBookings(int count, int? createdRentalId = null)
         {
             var bookings = new Fixture()
@@ -49,7 +75,6 @@ namespace DBoxx.Tests.Base
 
             return bookings;
         }
-
         protected async Task<List<Booking>> GetAndAddFakeBookings(int count, int? createdRentalId = null)
         {
             var bookings = GetFakeBookings(count, createdRentalId);
@@ -58,46 +83,23 @@ namespace DBoxx.Tests.Base
             return bookings;
         }
 
-        protected List<Rental> GetFakeRentals(int count)
-        {
-            var rentals = new Fixture()
-                                   .Build<Rental>()
-                                   .Do(o =>
-                                   {
-                                       o.Id = rentalId++;
-                                       o.PreparationTimeInDays = FakerExtensions.GenerateRandomNumber(1);
-                                   })
-                                   .OmitAutoProperties()
-                                   .CreateMany(count).ToList();
-
-            return rentals;
-        }
-
-        protected async Task<List<Rental>> GetAndAddFakeRentals(int count)
-        {
-            var rentals = GetFakeRentals(count);
-            context.Rental.AddRange(rentals);
-            await context.SaveChangesAsync();
-            return rentals;
-        }
-
-        protected List<Unit> GetFakeUnits(int count)
+        protected List<Unit> GetFakeUnits(int count, int? createdRentalId = null)
         {
             var units = new Fixture()
                                    .Build<Unit>()
                                    .Do(o =>
                                    {
                                        o.Id = unitId++;
+                                       o.RentalId = createdRentalId ?? 0;
                                    })
                                    .OmitAutoProperties()
                                    .CreateMany(count).ToList();
 
             return units;
         }
-
-        protected async Task<List<Unit>> GetAndAddFakeUnits(int count)
+        protected async Task<List<Unit>> GetAndAddFakeUnits(int count, int? createdRentalId = null)
         {
-            var units = GetFakeUnits(count);
+            var units = GetFakeUnits(count, createdRentalId);
             context.Unit.AddRange(units);
             await context.SaveChangesAsync();
             return units;
