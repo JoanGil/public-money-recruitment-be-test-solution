@@ -49,10 +49,10 @@ namespace VacationRental.Core.Services
                 PreparationTimeInDays = model.PreparationTimeInDays
             };
 
-            await context.Rental.AddAsync(rental);
+            context.Rental.Add(rental);
 
             var units = Enumerable.Range(1, model.Units).Select(u => new Unit { RentalId = rental.Id }).ToList();
-            await context.Unit.AddRangeAsync(units);
+            context.Unit.AddRange(units);
 
             await context.SaveChangesAsync();
 
@@ -61,6 +61,9 @@ namespace VacationRental.Core.Services
 
         public async Task<ResponseModel> UpdateRental(int rentalId, RentalUpdateModel model)
         {
+            if (rentalId <= 0)
+                return new ResponseModel(HttpStatusCode.BadRequest, "RentalId cannot be zero");
+
             if (model == null)
                 return new ResponseModel(HttpStatusCode.BadRequest, "Model cannot be null");
 

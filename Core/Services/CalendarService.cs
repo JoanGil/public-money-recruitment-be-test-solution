@@ -22,8 +22,14 @@ namespace VacationRental.Core.Services
 
         public async Task<ResponseModel<CalendarModel>> GenerateBookingCalendar(int rentalId, DateTime start, int nights)
         {
+            if (rentalId <= 0)
+                return new ResponseModel<CalendarModel>(HttpStatusCode.BadRequest, "RentalId cannot be less than or equal to 0");
+
             if (nights <= 0)
                 return new ResponseModel<CalendarModel>(HttpStatusCode.BadRequest, "Nights value must be positive");
+
+            if (start.Date <= DateTime.Today)
+                return new ResponseModel<CalendarModel>(HttpStatusCode.BadRequest, "Start date must be greater than today");
 
             var rentalResponse = await rentalService.GetRentalById(rentalId);
             if (rentalResponse == null || rentalResponse.HttpStatusCode == HttpStatusCode.NotFound)

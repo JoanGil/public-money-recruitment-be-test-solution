@@ -22,4 +22,10 @@
     <ProjectReference Include="..\VacationRental.Api\VacationRental.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
