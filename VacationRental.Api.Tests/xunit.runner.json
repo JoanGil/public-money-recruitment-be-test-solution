@@ -1,3 +1,6 @@
 {
-  "parallelizeAssembly": false
+  "parallelizeAssembly": false,
+  "parallelizeTestCollections": false,
+  "maxParallelThreads": 1,
+  "diagnosticMessages": true
 }
