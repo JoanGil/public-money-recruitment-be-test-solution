@@ -1,7 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using System.Net;
+using System.Threading.Tasks;
+
+using VacationRental.Api.Models.Response;
+using VacationRental.Core.Interfaces;
+using VacationRental.Core.Models.Api;
 
 namespace VacationRental.Api.Controllers
 {
@@ -9,35 +13,43 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
+        private readonly IRentalService rentalService;
 
-        public RentalsController(IDictionary<int, RentalViewModel> rentals)
+        public RentalsController(IRentalService rentalService)
         {
-            _rentals = rentals;
+            this.rentalService = rentalService;
         }
 
         [HttpGet]
         [Route("{rentalId:int}")]
-        public RentalViewModel Get(int rentalId)
+        public async Task<IActionResult> GetRentalById(int rentalId)
         {
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
+            var response = await rentalService.GetRentalById(rentalId);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
 
-            return _rentals[rentalId];
+            return Ok(response.Data);
         }
 
         [HttpPost]
-        public ResourceIdViewModel Post(RentalBindingModel model)
+        public async Task<IActionResult> CreateRental(RentalCreateModel model)
         {
-            var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
+            var response = await rentalService.CreateRental(model);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
 
-            _rentals.Add(key.Id, new RentalViewModel
-            {
-                Id = key.Id,
-                Units = model.Units
-            });
+            return Ok(new ResourceIdViewModel { Id = (int)response.Data });
+        }
 
-            return key;
+        [HttpPut]
+        [Route("{rentalId:int}")]
+        public async Task<IActionResult> UpdateRental(int rentalId, RentalUpdateModel model)
+        {
+            var response = await rentalService.UpdateRental(rentalId, model);
+            if (response.HttpStatusCode != HttpStatusCode.OK)
+                return StatusCode((int)response.HttpStatusCode, response.Validation.Message);
+
+            return Ok(new ResourceIdViewModel { Id = (int)response.Data });
         }
     }
 }

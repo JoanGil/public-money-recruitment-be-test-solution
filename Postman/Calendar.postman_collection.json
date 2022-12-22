@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "ea97e2d8-e478-45ee-928f-20cef0b3224d",
+		"name": "Calendar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "546556"
+	},
+	"item": [
+		{
+			"name": "Get Calendar Availability",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/calendar?rentalId=1&start=2022-12-25T00:00:00&nights=10",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "rentalId",
+							"value": "1"
+						},
+						{
+							"key": "start",
+							"value": "2022-12-25T00:00:00"
+						},
+						{
+							"key": "nights",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "85bcc07d-8ffa-45fa-8838-b0eae27b006a",
+		"name": "Rentals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "546556"
+	},
+	"item": [
+		{
+			"name": "Get Rental by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/rentals/1",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"rentals",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Rental",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Units\": 1,\r\n    \"PreparationTimeInDays\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/rentals",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"rentals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Rental",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Units\":4,\r\n    \"PreparationTimeInDays\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/rentals/1",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"rentals",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
