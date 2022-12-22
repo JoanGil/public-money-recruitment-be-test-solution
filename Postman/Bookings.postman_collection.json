@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "2101b74a-31e0-42f1-84be-13e778b76ba1",
+		"name": "Bookings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "546556"
+	},
+	"item": [
+		{
+			"name": "Get Booking by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/bookings/2",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"bookings",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Bookings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/bookings",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RentalId\": 1,\r\n    \"Start\": \"2022-12-25T00:00:00\",\r\n    \"Nights\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/{{api-route}}/bookings",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"{{api-route}}",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

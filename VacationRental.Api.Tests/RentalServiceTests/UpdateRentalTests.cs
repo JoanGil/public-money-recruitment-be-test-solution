@@ -79,7 +79,6 @@ namespace VacationRental.Api.Tests.RentalServiceTests
             expectedResponse.Should().BeEquivalentTo(actualResponse);
         }
 
-
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
